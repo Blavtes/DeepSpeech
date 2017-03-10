@@ -146,7 +146,7 @@ def main(_):
 
     # Default to using pulse
     device = 0
-    for i in xrange(0, pa.get_device_count()):
+    for i in range(0, pa.get_device_count()):
         info = pa.get_device_info_by_index(i)
         if info['name'] == 'pulse':
             device = i

@@ -12,13 +12,13 @@ from os import rmdir
 from os import remove
 from glob import glob
 from math import ceil
-from Queue import Queue
+from queue import Queue
 from os import makedirs
 from sox import Transformer
 from itertools import cycle
 from os.path import getsize
 from threading import Thread
-from Queue import PriorityQueue
+from queue import PriorityQueue
 from util.stm import parse_stm_file
 from util.gpu import get_available_gpus
 from util.text import text_to_char_array, ctc_label_dense_to_sparse
@@ -74,7 +74,7 @@ class DataSet(object):
 
     def start_queue_threads(self, session, coord):
         self._coord = coord
-        batch_threads = [Thread(target=self._populate_batch_queue, args=(session,)) for i in xrange(self._thread_count)]
+        batch_threads = [Thread(target=self._populate_batch_queue, args=(session,)) for i in range(self._thread_count)]
         for batch_thread in batch_threads:
             batch_thread.daemon = True
             batch_thread.start()
@@ -104,7 +104,7 @@ class DataSet(object):
             source = audiofile_to_input_vector(wav_file, self._numcep, self._numcontext)
             source_len = len(source)
             with codecs.open(txt_file, encoding="utf-8") as open_txt_file:
-                target = unicodedata.normalize("NFKD", open_txt_file.read()).encode("ascii", "ignore")
+                target = unicodedata.normalize("NFKD", open_txt_file.read())
                 target = text_to_char_array(target)
             target_len = len(target)
             try:
@@ -129,12 +129,12 @@ class DataSet(object):
 
 def read_data_sets(data_dir, train_batch_size, dev_batch_size, test_batch_size, numcep, numcontext, thread_count=8, limit_dev=0, limit_test=0, limit_train=0, sets=[]):
     # Conditionally download data
-    TED_DATA = "TEDLIUM_release2.tar.gz"
-    TED_DATA_URL = "http://www.openslr.org/resources/19/TEDLIUM_release2.tar.gz"
+    TED_DATA = "TEDLIUM_release1.tar.gz"
+    TED_DATA_URL = "http://www.openslr.org/resources/7/TEDLIUM_release1.tar.gz"
     local_file = base.maybe_download(TED_DATA, data_dir, TED_DATA_URL)
 
     # Conditionally extract TED data
-    TED_DIR = "TEDLIUM_release2"
+    TED_DIR = "TEDLIUM_release1"
     _maybe_extract(data_dir, TED_DIR, local_file)
 
     # Conditionally convert TED sph data to wav
